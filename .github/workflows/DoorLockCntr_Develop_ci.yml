@@ -32,11 +32,11 @@ jobs:
       - name: Run ModelAdvisor
         uses: matlab-actions/run-command@v1
         with:
-          command: openProject('${{ env.PROJECTNAME }}');, runModelAdvisor(${{ env.MODELNAME }}');
+          command: openProject('${{ env.PROJECTNAME }}');, runModelAdvisor('${{ env.MODELNAME }}');
       - name: Run Design Error Detection
         uses: matlab-actions/run-command@v1
         with:
-          command: openProject('${{ env.PROJECTNAME }}');, runDesignErrorDetection(${{ env.MODELNAME }}');
+          command: openProject('${{ env.PROJECTNAME }}');, runDesignErrorDetection('${{ env.MODELNAME }}');
   
   testing:
     runs-on: self-hosted
@@ -62,7 +62,7 @@ jobs:
       - name: Code Generation
         uses: matlab-actions/run-command@v1
         with:
-          command: openProject('${{ env.PROJECTNAME }}');, runBuild(${{ env.MODELNAME }}');
+          command: openProject('${{ env.PROJECTNAME }}');, runBuild('${{ env.MODELNAME }}');
       
   package:
     runs-on: self-hosted
