@@ -6,8 +6,7 @@ name: Sample for Model Review in PullRequest
 on:
   # Triggers the workflow on pull request events but only for the main branch
   pull_request_target:
-    branches:
-      - 'master'
+    branches: [ master ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -39,11 +38,6 @@ jobs:
         uses: matlab-actions/run-command@v1
         with:
           command: openProject('${{ env.PROJECTNAME }}');,  extractAndCompareMdl('${{ github.head_ref }}', '${{ env.MODELNAME }}');
-
-  package:
-    runs-on: self-hosted
-    needs: [review]
-    steps:
       - name: Archive results
         uses: actions/upload-artifact@v2
         with:
