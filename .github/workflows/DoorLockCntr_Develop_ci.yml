@@ -33,10 +33,6 @@ jobs:
         uses: matlab-actions/run-command@v1
         with:
           command: openProject('${{ env.PROJECTNAME }}');, runModelAdvisor(${{ env.MODELNAME }}');
-
-  verify:
-    runs-on: self-hosted
-    needs: [setup]
     steps:
       - name: Run Design Error Detection
         uses: matlab-actions/run-command@v1
@@ -45,7 +41,7 @@ jobs:
   
   testing:
     runs-on: self-hosted
-    needs: [verify]
+    needs: [setup]
     steps:
       - name: unit test
         uses: matlab-actions/run-tests@v1
