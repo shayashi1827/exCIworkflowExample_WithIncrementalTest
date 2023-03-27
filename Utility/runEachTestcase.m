@@ -17,6 +17,9 @@ tcobjList = getAllTestCases(tfobj);
 
 %% ----- テストケース実行及びレポート生成 ----- %%
 resultDir = fullfile(proj.RootFolder, 'Test_Results');
+if ~exist(resultDir, 'dir')
+    mkdir(resultDir);
+end
 runTestAndExportResults(mdlname, resultDir, tcobjList, tfobj)
  
 end
