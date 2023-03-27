@@ -1,0 +1,51 @@
+#Copyright 2022 The MathWorks, Inc.
+
+name: Sample for Model Review in PullRequest
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on pull request events but only for the main branch
+  pull_request_target:
+    branches:
+      - 'master'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  PROJECTNAME: ExMBDCI_EXPO2023.prj
+  LOGS_PATH: ./Code
+  ARTIFACTS_NAME: DoorLockCntr_review_artifacts
+  MODELNAME: DoorLockCntr
+
+jobs:
+  setup:
+    runs-on: self-hosted
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+review:
+  runs-on: self-hosted
+  needs: [setup]
+  steps:
+    - name: generate model webview
+      uses: matlab-actions/run-command@v1
+      with:
+        command: openProject('${{ env.PROJECTNAME }}');,  generateMdlWebView('${{ env.MODELNAME }}');
+    - name: generate model compare report
+      uses: matlab-actions/run-command@v1
+      with:
+        command: openProject('${{ env.PROJECTNAME }}');,  extractAndCompareMdl('${{ github.head_ref }}', '${{ env.MODELNAME }}');
+
+package:
+  runs-on: self-hosted
+  needs: [review]
+    - name: Archive results
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ env.ARTIFACTS_NAME }}
+        path: |
+          ./Design/${{ env.MODELNAME }}/pipeline/analyze/review/**/*

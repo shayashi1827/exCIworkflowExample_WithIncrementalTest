@@ -18,7 +18,7 @@ compMdlRelPath  = fullfile(projectRoot.char, mdlpath, compMdlName);     % コピ
 
 % 該当コミットIDのモデルファイルを別名で同じフォルダに保存
 cmd = ['git show ', commit_id, ':', baseMdlRelPath, ' > ', compMdlRelPath];
-system(cmd)
+system(cmd);
 
 % リターンからは拡張子を削除
 compMdlName = strrep(compMdlName, '.slx', '');
