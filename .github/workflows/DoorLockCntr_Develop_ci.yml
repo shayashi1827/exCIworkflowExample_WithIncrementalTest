@@ -33,7 +33,6 @@ jobs:
         uses: matlab-actions/run-command@v1
         with:
           command: openProject('${{ env.PROJECTNAME }}');, runModelAdvisor(${{ env.MODELNAME }}');
-    steps:
       - name: Run Design Error Detection
         uses: matlab-actions/run-command@v1
         with:
