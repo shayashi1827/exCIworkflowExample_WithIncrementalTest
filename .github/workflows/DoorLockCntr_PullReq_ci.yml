@@ -6,8 +6,7 @@ name: Sample for Model Review in PullRequest
 on:
   # Triggers the workflow on pull request events but only for the main branch
   pull_request_target:
-    branches:
-      - 'master'
+    branches: [ master ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
