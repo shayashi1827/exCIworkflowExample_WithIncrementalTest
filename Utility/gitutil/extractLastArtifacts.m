@@ -2,7 +2,7 @@ function compMdlName = extractLastArtifacts(branch, mdlname, opRemote)
 % safe directory追加（gitの仕様変更に伴う対応)
 myProject       = matlab.project.currentProject;
 projectRoot     = myProject.RootFolder;
-cmd = ['git config --global --add safe.directory ', projectRoot];
+cmd = ['git config --global --add safe.directory ', projectRoot.char];
 [st, log] = system(cmd);
 
 % 直近のcomit id取得
