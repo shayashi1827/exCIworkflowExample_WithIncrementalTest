@@ -22,9 +22,12 @@ baseMdlName     = [mdlname, '.slx'];
 mdlFullPath     = which([mdlname, '.slx']);
 mdlRelPath      = strrep(mdlFullPath, [projectRoot.char,'\'], '');   % 絶対パス to 相対パス
 [mdlpath, ~, ~] = fileparts(mdlRelPath);
-baseMdlRelPath  = [mdlpath, '/', baseMdlName];                                      % コミット：ファイル相対パス
+% コピー先は絶対パス
 compMdlName = [mdlname, '_comp.slx'];
-compMdlRelPath  = fullfile(projectRoot.char, mdlpath, compMdlName);     % コピー先は絶対パス
+compMdlRelPath  = fullfile(projectRoot.char, mdlpath, compMdlName);
+% ベース指定は相対パス.※ただしデリミタを変更する（git showでのfatal error対応）
+mdlpath = strrep(mdlpath, '\', '/');
+baseMdlRelPath  = [mdlpath, '/', baseMdlName];
 
 % 該当コミットIDのモデルファイルを別名で同じフォルダに保存
 cmd = ['git show ', commit_id, ':', baseMdlRelPath, ' > ', compMdlRelPath]
