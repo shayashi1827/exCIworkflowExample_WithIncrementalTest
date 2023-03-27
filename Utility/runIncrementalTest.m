@@ -10,7 +10,7 @@ sltest.testmanager.clearResults;
 %% ----- テストケースの絞り込み ----- %%    
 % 前回コミット時の成果物取得
 [~, cBranch] = system('git branch --show-current');
-comMdlName = extractLastArtifacts(strtrim(cBranch), mdlname);
+comMdlName = extractLastArtifacts(strtrim(cBranch), mdlname, false);
 
 % モデルの差分取得
 [diffSSList,~]= DetectUpdatedSubsystems(comMdlName, mdlname);

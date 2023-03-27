@@ -37,7 +37,7 @@ jobs:
       - name: generate model compare report
         uses: matlab-actions/run-command@v1
         with:
-          command: openProject('${{ env.PROJECTNAME }}');,  compmdl = extractLastArtifacts('${{ github.head_ref }}', '${{ env.MODELNAME }}');, generateMdlCompareReport('${{ env.MODELNAME }}', compmdl);
+          command: openProject('${{ env.PROJECTNAME }}');,  compmdl = extractLastArtifacts('${{ github.head_ref }}', '${{ env.MODELNAME }}', true);, generateMdlCompareReport('${{ env.MODELNAME }}', compmdl);
       - name: Archive results
         uses: actions/upload-artifact@v2
         with:
