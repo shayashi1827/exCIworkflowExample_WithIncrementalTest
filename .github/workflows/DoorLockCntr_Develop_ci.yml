@@ -1,0 +1,82 @@
+name: Model verification example for the DriverSwRequest model
+
+on:
+  # Triggers the workflow on push events but only for the main branch
+  push:
+    branches: [ master ]
+    paths:
+      - 'Design/DoorLockCntr/**/*'
+      - '.github/workflows/DoorLockCntr_Develop_ci.yml'
+      - 'Utility/**/*'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  PROJECTNAME: ExMBDCI_EXPO2023.prj
+  LOGS_PATH: ./Code
+  ARTIFACTS_NAME: DoorLockCntr_verification_artifacts
+  MODELNAME: DoorLockCntr
+
+jobs:
+  setup:
+    runs-on: self-hosted
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+  verify:
+    runs-on: self-hosted
+    needs: [setup]
+    steps:
+      - name: Run ModelAdvisor
+        uses: matlab-actions/run-command@v1
+        with:
+          command: openProject('${{ env.PROJECTNAME }}');, runModelAdvisor(${{ env.MODELNAME }}');
+
+  verify:
+    runs-on: self-hosted
+    needs: [setup]
+    steps:
+      - name: Run Design Error Detection
+        uses: matlab-actions/run-command@v1
+        with:
+          command: openProject('${{ env.PROJECTNAME }}');, runDesignErrorDetection(${{ env.MODELNAME }}');
+  
+  testing:
+    runs-on: self-hosted
+    needs: [verify]
+    steps:
+      - name: unit test
+        uses: matlab-actions/run-tests@v1
+        with:
+          select-by-folder: ./Design/DoorLockCntr
+          test-results-junit: ./Design/DoorLockCntr/pipeline/analyze/testing/DriverSwRequestJUnitFormatTestResults.xml
+          test-results-pdf: ./Design/DoorLockCntr/pipeline/analyze/testing/DriverSwRequestTestResults.pdf
+          test-results-simulink-test: ./Design/DoorLockCntr/pipeline/analyze/testing/DriverSwRequestTestResults.mldatx
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v3
+        if: always()
+        with:
+          report_paths: './Design/DoorLockCntr/pipeline/analyze/testing/DriverSwRequestJUnitFormatTestResults.xml'
+  
+  build:
+    runs-on: self-hosted
+    needs: [verify,testing]
+    steps:
+      - name: Code Generation
+        uses: matlab-actions/run-command@v1
+        with:
+          command: openProject('${{ env.PROJECTNAME }}');, runBuild(${{ env.MODELNAME }}');
+      
+  package:
+    runs-on: self-hosted
+    needs: [verify,build,testing]
+    steps:
+      - name: Archive results
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.ARTIFACTS_NAME }}
+          path: |
+            ./Design/DoorLockCntr/pipeline/analyze/**/*
+            ./Code/codegen/DoorLockCntr_ert_rtw
