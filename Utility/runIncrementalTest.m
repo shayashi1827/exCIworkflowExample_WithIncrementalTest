@@ -17,18 +17,24 @@ comMdlName = extractLastArtifacts(strtrim(cBranch), mdlname, false);
 if(isempty(diffSSList))
     disp('更新が見つかりませんでした');
 else
-    % 要件の差分取得(option)
-
     % 差分が合致するテストケースの特定
     testfileName = ['Test_', mdlname];      % テストファイル名："Test_モデル名"
     tfobj = sltest.testmanager.load(testfileName);
     tcobjList = getDiffTestcases(tfobj, diffSSList);
-
-    %% ----- テストケース実行及びレポート生成 ----- %%
-    resultDir = fullfile(proj.RootFolder, 'Test_Results');
-    if ~exist(resultDir, 'dir')
-        mkdir(resultDir);
-    end
-    runTestAndExportResults(mdlname, resultDir, tcobjList, tfobj)
-end    
+     if(isempty(tcobjList))
+         disp('差分に対応するテストケースが見つかりませんでした');
+     else
+        %% ----- テストケース実行及びレポート生成 ----- %%
+        resultDir = fullfile(proj.RootFolder, 'Test_Results');
+        if ~exist(resultDir, 'dir')
+            mkdir(resultDir);
+        end
+        runTestAndExportResults(mdlname, resultDir, tcobjList, tfobj);
+     end 
 end
+
+% 過去のモデルを削除
+delete(which(comMdlName));
+
+end
+
