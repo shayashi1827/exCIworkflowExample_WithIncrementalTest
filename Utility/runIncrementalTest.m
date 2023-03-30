@@ -1,4 +1,7 @@
 function runIncrementalTest(mdlname)
+% 前回コミットとのモデル差分を抽出し、対応するテストケースのみ用いた差分テストを実行する
+% ローカル用
+
 % プロジェクト取得
 proj = matlab.project.currentProject;
 
